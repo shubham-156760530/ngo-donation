@@ -1,0 +1,44 @@
+{% extends 'base.html' %}
+{% load crispy_forms_tags %}
+{% load static %}
+
+{% block content %}
+    <div class="card" style="width: 18rem; margin:auto; margin-top:50px; box-shadow: 3px 3px 10px 10px rgb(55, 55, 55);">
+        <img class="card-img-top" src="{% static 'images/sign.jpg' %}" alt="Card image cap">
+        <div class="card-body">
+            <h5 class="card-title">SMILE FOUNDATION</h5>
+            <p class="card-text">Hii ! Donate Your Love And Support to Privilleged Children.</p>
+        </div>
+        <div class="container">
+            <form method="POST" action="../ngo-donation/">
+                {% csrf_token %}
+                {% crispy form %}
+            </form>
+            <br>
+
+            {% if payment %}
+                <form method="POST" action="payment-status">
+                    {% comment %} {% csrf_token %} {% endcomment %}
+                    <script
+                        src="https://checkout.razorpay.com/v1/checkout.js"
+                        data-key="rzp_test_Ki1Kw2Z1hhvly7" 
+                        data-amount="{{ payment.amount }}" 
+                        data-currency="{{ payment.currency }}"
+                        data-order_id="{{ payment.id }}"
+                        data-buttontext="MAKE PAYMENT"
+                        data-name="DONATION FOR SMILE FOUNDATION"
+                        data-description="Donate love and suppost for unprivileged children"
+                        data-image="https://example.com/your_logo.jpg"
+                        data-prefill.name="{{ payment.name }}"
+                        data-prefill.email="you@example.com"
+                        data-theme.color="#212529"
+                    ></script>
+                    {% csrf_token %}
+                    <input type="hidden" custom="Hidden Element" name="hidden">
+                </form>
+            {% endif %}
+        </div>
+    </div>
+{% endblock %}
+
+{% comment %} data-theme.color="#F37254" {% endcomment %}
